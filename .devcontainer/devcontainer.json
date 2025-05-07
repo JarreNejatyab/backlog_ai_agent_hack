@@ -1,0 +1,38 @@
+{
+	"name": "rio",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	"runArgs": [
+        "--network", "host"
+    ],
+    "hostRequirements": {
+        "cpus": 4
+    },
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,
+			"zshConfiguration": "oh-my-zsh"
+		},
+		// "ghcr.io/devcontainers/features/python:1": {
+		// 	"version": "3.12",
+		// 	"osVariant": "bullseye"
+		// },
+		"ghcr.io/devcontainers/features/dotnet:1": {
+			"version": "8"
+		},
+		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.dotnet-interactive-vscode",
+				"ms-semantic-kernel.semantic-kernel",
+				"esbenp.prettier-vscode"
+			]
+		}
+	},
+	"waitFor": "onCreateCommand",
+    "postCreateCommand": "bash .devcontainer/post_create.sh"
+}
