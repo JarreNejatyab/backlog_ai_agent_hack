@@ -92,3 +92,6 @@ artifacts/
 # Local development settings
 appsettings.Development.json
 local.settings.json
+
+# environment
+*.env
