@@ -1,9 +1,10 @@
 {
-	"name": "rio",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
-	},
+	"name": "backlog_sk_hack",
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	// "build": {
+	// 	"dockerfile": "Dockerfile",
+	// 	"context": ".."
+	// },
 	"runArgs": [
         "--network", "host"
     ],
@@ -21,8 +22,7 @@
 		// },
 		"ghcr.io/devcontainers/features/dotnet:1": {
 			"version": "8"
-		},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
+		}
 	},
 	"customizations": {
 		"vscode": {

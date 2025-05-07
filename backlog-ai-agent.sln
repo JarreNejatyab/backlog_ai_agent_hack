@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{71E6E750-85FD-B5BC-4321-E01377EC6231}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BacklogAiAgent", "dotnet\BacklogAiAgent\BacklogAiAgent.csproj", "{07F707D1-A64B-353D-8E29-28BE0E2CE76F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07F707D1-A64B-353D-8E29-28BE0E2CE76F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F707D1-A64B-353D-8E29-28BE0E2CE76F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F707D1-A64B-353D-8E29-28BE0E2CE76F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F707D1-A64B-353D-8E29-28BE0E2CE76F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{07F707D1-A64B-353D-8E29-28BE0E2CE76F} = {71E6E750-85FD-B5BC-4321-E01377EC6231}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9F01A1A9-7F1E-4D07-A2F7-BE2B9CD68BEA}
+	EndGlobalSection
+EndGlobal
