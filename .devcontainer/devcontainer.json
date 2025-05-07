@@ -20,9 +20,9 @@
 		// 	"version": "3.12",
 		// 	"osVariant": "bullseye"
 		// },
-		"ghcr.io/devcontainers/features/dotnet:1": {
-			"version": "8"
-		}
+		// "ghcr.io/devcontainers/features/dotnet:1": {
+		// 	"version": "8"
+		// }
 	},
 	"customizations": {
 		"vscode": {
