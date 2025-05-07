@@ -53,7 +53,7 @@ class FriendlyAgent:
             # Initialize the chat agent
             self.agent = ChatCompletionAgent(
                 service=chat_service,
-                name="Friendly Assistant",
+                name="ado-assistant",
                 instructions=self.instructions
             )
             
