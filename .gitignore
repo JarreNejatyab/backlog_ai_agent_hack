@@ -5,7 +5,6 @@ __pycache__
 output/
 
 *.rest 
-*.env.*
 # .NET build artifacts
 bin/
 obj/
