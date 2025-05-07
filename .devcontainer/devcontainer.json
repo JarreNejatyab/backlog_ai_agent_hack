@@ -34,5 +34,9 @@
 		}
 	},
 	"waitFor": "onCreateCommand",
-    "postCreateCommand": "bash .devcontainer/post_create.sh"
+    // "postCreateCommand": "bash .devcontainer/post_create.sh",
+	"mounts": [
+		// map host ssh to container
+		"source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/codespace/.ssh,type=bind,consistency=cached"
+	]
 }
