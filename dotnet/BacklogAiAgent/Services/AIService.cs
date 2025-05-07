@@ -17,11 +17,11 @@ namespace BacklogAiAgent.Services
     /// </summary>
     public class AIService
     {
-        private readonly ConfigurationManager _config;
+        private readonly BacklogAiAgent.Config.ConfigurationManager _config;
         private readonly Kernel _kernel;
         private readonly ChatCompletionAgent _agent ;
 
-        public AIService(ConfigurationManager config)
+        public AIService(BacklogAiAgent.Config.ConfigurationManager config)
         {
             _config = config;
             _kernel = InitializeSemanticKernel();

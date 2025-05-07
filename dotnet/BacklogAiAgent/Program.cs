@@ -1,26 +1,51 @@
 ﻿using System;
-using System.Threading.Tasks;
 using BacklogAiAgent.Config;
 using BacklogAiAgent.Services;
+using Microsoft.Extensions.FileProviders;
 
+var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine("Starting Backlog AI Agent...");
+// Add services to the container
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
-try
+// Configure services
+builder.Services.AddSingleton<BacklogAiAgent.Config.ConfigurationManager>();
+builder.Services.AddSingleton<AIService>();
+
+// Add CORS policy
+builder.Services.AddCors(options =>
 {
-    // Initialize configuration
-    var config = new ConfigurationManager();
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
-    // Initialize services
-    var aiService = new AIService(config);
+var app = builder.Build();
 
-    var chatService = new ChatService(aiService);
-
-    // Run chat loop
-    await chatService.RunChatLoopAsync();
-}
-catch (Exception ex)
+// Configure middleware
+if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine($"Error: {ex.Message}");
-    Console.WriteLine(ex.StackTrace);
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseCors("AllowAllOrigins");
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+// Add a fallback route to serve index.html for SPA navigation
+app.MapFallbackToFile("index.html");
+
+// Add a specific route for the root URL to serve index.html
+app.MapGet("/", () => Results.File("index.html", "text/html"));
+
+app.Run();
