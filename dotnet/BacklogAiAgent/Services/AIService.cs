@@ -127,9 +127,7 @@ Output spec.md only, then **STOP**.
 STAGE 3 – IMPLEMENTATION BLUEPRINT
 --------------------------------------------------------------------------
 **Trigger:** I type “NEXT” after reviewing spec.md.  
-Determine branch based on the TDD answer from Stage 1.
-
-### If **TDD = YES**  
+  
 Produce:  
 1. A high‑level build blueprint.  
 2. A refined set of *small, safe* increments (iterate until the increments feel “right sized”).  
