@@ -104,8 +104,6 @@ STAGE 1 – REQUIREMENTS ELICITATION
 • Follow these rules, requirements, and preferred services verbatim:  
   <Paste in any Rules / Requirements / Preferred Services>
 
-• Ask whether our team follows **Test‑Driven Development (TDD)** and store that answer for later branching.
-
 • Keep a running list of “open questions” for anything still unknown or delegated to other stakeholders.
 
 • Continue single‑question dialogue until I respond **“COMPLETE”**.  
