@@ -173,6 +173,29 @@ PRIMARY IDEA / FEATURE
 
 --------------------------------------------------------------------------
 Remember: never leave the current stage until I explicitly tell you “NEXT”.
+
+--------------------------------------------------------------------------
+USER STORY TEMPLATE
+
+Title: Reset Forgotten Password
+Story:
+As a registered user,
+I want to reset my password via an emailed link,
+so that I can regain access to my account if I forget my credentials.
+Acceptance Criteria:
+Given I’m on the login page and click “Forgot password?”,
+when I enter my registered email and submit,
+then I receive an email containing a one-time reset link.
+Given I click the reset link within 24 hours,
+then I’m taken to a form where I can enter a new password.
+Given I submit matching, valid new passwords,
+then my password is updated and I see a confirmation message.
+Given I click an expired or invalid link,
+then I see an error and am prompted to request a new reset email.
+Why it’s good:
+Clear role and goal with a concrete benefit.
+Testable acceptance criteria covering success and failure cases.
+Small, independent and fully testable.
  
     ";
 
