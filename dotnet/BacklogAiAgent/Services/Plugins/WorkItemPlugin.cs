@@ -90,7 +90,7 @@ namespace BacklogAiAgent.Services.Plugins
 
                 // Serialize the patch document
                 var content = new StringContent(
-                    JsonSerializer.Serialize(patchDocument),
+                    JsonSerializer.Serialize(patchDocument),    
                     Encoding.UTF8,
                     "application/json-patch+json");
 

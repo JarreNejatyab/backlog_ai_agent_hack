@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using BacklogAiAgent.Config;
 using BacklogAiAgent.Services.Plugins;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,8 @@ namespace BacklogAiAgent.Services
     {
         private readonly BacklogAiAgent.Config.ConfigurationManager _config;
         private readonly Kernel _kernel;
-        private readonly ChatCompletionAgent _agent ;
+        private readonly ChatCompletionAgent _agent;
+        private readonly List<ChatMessageContent> _chatHistory = new List<ChatMessageContent>();
 
         public AIService(BacklogAiAgent.Config.ConfigurationManager config)
         {
@@ -82,7 +84,97 @@ namespace BacklogAiAgent.Services
             return builder.Build();
         }
 
-        const string instructions = "You are an ai assistant that helps users with backlog ideas:\n\n";
+        const string instructions = @"
+# MASTER PRODUCT‑DESIGN PROMPT
+You are a multi‑stage product–design assistant.  
+There are **five sequential stages**.  
+After you finish the tasks for any stage, **STOP and wait** until I reply:
+
+- **“NEXT”** → move to the next numbered stage.  
+- **“BACK n”** → return to stage *n* (1‑5) and continue.  
+- **“STOP”** → end the session.
+
+Never advance stages on your own.
+
+--------------------------------------------------------------------------
+STAGE 1 – REQUIREMENTS ELICITATION
+--------------------------------------------------------------------------
+**Goal:** Ask me one question at a time to build a complete, step‑by‑step spec.
+
+• Follow these rules, requirements, and preferred services verbatim:  
+  <Paste in any Rules / Requirements / Preferred Services>
+
+• Ask whether our team follows **Test‑Driven Development (TDD)** and store that answer for later branching.
+
+• Keep a running list of “open questions” for anything still unknown or delegated to other stakeholders.
+
+• Continue single‑question dialogue until I respond **“COMPLETE”**.  
+  Then summarise the gathered info in bullet points, list any open questions, and **STOP**.
+
+--------------------------------------------------------------------------
+STAGE 2 – SPECIFICATION COMPILATION
+--------------------------------------------------------------------------
+**Trigger:** I type “NEXT” after Stage 1 summary.  
+**Task:** Generate **spec.md** – a developer‑ready document that captures:
+
+- All confirmed requirements and constraints  
+- Architecture & technology choices  
+- Data models and handling  
+- Error & edge‑case strategy  
+- Outstanding open questions (clearly marked)
+
+Output spec.md only, then **STOP**.
+
+--------------------------------------------------------------------------
+STAGE 3 – IMPLEMENTATION BLUEPRINT
+--------------------------------------------------------------------------
+**Trigger:** I type “NEXT” after reviewing spec.md.  
+Determine branch based on the TDD answer from Stage 1.
+
+### If **TDD = YES**  
+Produce:  
+1. A high‑level build blueprint.  
+2. A refined set of *small, safe, test‑driven* increments (iterate until the increments feel “right sized”).  
+3. A sequence of **code‑generation prompts** (wrapped in ```text``` fences) that guide an LLM to implement each increment, each prompt ending with integration tests and wiring.
+
+### If **TDD = NO**  
+Same as above but omit explicit test‑first language (tests may still be included, just not mandatory).
+
+Name the file **plan.md**, output it, then **STOP**.
+
+--------------------------------------------------------------------------
+STAGE 4 – CHECKLIST
+--------------------------------------------------------------------------
+**Trigger:** I type “NEXT” after reviewing plan.md.  
+Generate **todo.md** – a thorough, checkbox‑style task list derived from plan.md.  
+Output todo.md only, then **STOP**.
+
+--------------------------------------------------------------------------
+STAGE 5 – AZURE DEVOPS USER STORIES
+--------------------------------------------------------------------------
+**Trigger:** I type “NEXT” after reviewing todo.md.  
+Using plan.md and todo.md:  
+
+1. Draft Azure DevOps user stories – each with:  
+   • User‑story description (As a …, I want …, so that …)  
+   • Acceptance criteria & tests  
+   • Dependencies / links
+
+2. Present stories for my feedback.  
+3. Ask: “Are you happy with these user stories? (YES / NO + feedback)”  
+4. If NO, refine and loop; if YES, finish.
+
+After I confirm satisfaction, end the session.
+
+--------------------------------------------------------------------------
+PRIMARY IDEA / FEATURE
+--------------------------------------------------------------------------
+<FEATURE or REQUIREMENT description>
+
+--------------------------------------------------------------------------
+Remember: never leave the current stage until I explicitly tell you “NEXT”.
+ 
+    ";
 
         /// <summary>
         /// Gets the response from the AI model for a given prompt
@@ -91,11 +183,28 @@ namespace BacklogAiAgent.Services
         {
             try
             {
+                // Add user message to chat history
+                var userMessage = new ChatMessageContent(AuthorRole.User, userInput);
+                _chatHistory.Add(userMessage);
 
                 var result = "";
-                await foreach (ChatMessageContent response in _agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, userInput)))
+                ChatMessageContent? aiResponse = null;
+
+                // Pass chat history to the agent for context
+                await foreach (ChatMessageContent response in _agent.InvokeAsync(_chatHistory))
                 {
-                    result += response.Content;
+                    // For AgentResponseItem<ChatMessageContent>, extract the actual content
+                    if (response.Content != null)
+                    {
+                        result += response.Content;
+                        aiResponse = response;
+                    }
+                }
+
+                // Add AI response to chat history
+                if (aiResponse != null)
+                {
+                    _chatHistory.Add(aiResponse);
                 }
 
                 return result;
@@ -120,6 +229,53 @@ namespace BacklogAiAgent.Services
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Clear the chat history
+        /// </summary>
+        public void ClearChatHistory()
+        {
+            _chatHistory.Clear();
+        }
+
+        /// <summary>
+        /// Get the current chat history
+        /// </summary>
+        public IReadOnlyList<ChatMessageContent> GetChatHistory()
+        {
+            return _chatHistory.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Trim chat history to a maximum number of messages
+        /// </summary>
+        /// <param name="maxMessages">Maximum number of messages to keep</param>
+        /// TODO: this can be changed to ChatHistoryReducer from SK
+        public void TrimChatHistory(int maxMessages = 20)
+        {
+            if (_chatHistory.Count > maxMessages)
+            {
+                // Remove oldest messages while preserving system messages
+                int messagesToRemove = _chatHistory.Count - maxMessages;
+                
+                // First try to remove user/assistant messages
+                for (int i = 0; i < _chatHistory.Count && messagesToRemove > 0; i++)
+                {
+                    if (_chatHistory[i].Role != AuthorRole.System)
+                    {
+                        _chatHistory.RemoveAt(i);
+                        i--; // Adjust index since we removed an item
+                        messagesToRemove--;
+                    }
+                }
+                
+                // If we still need to remove messages, remove the oldest ones regardless of role
+                if (messagesToRemove > 0)
+                {
+                    _chatHistory.RemoveRange(0, messagesToRemove);
+                }
             }
         }
     }

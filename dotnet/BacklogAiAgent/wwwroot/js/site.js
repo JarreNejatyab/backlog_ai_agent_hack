@@ -2,9 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
+    const clearHistoryButton = document.getElementById('clear-history');
     
     // Add event listener for the send button
     sendButton.addEventListener('click', sendMessage);
+    
+    // Add event listener for the clear history button
+    clearHistoryButton.addEventListener('click', clearChatHistory);
     
     // Add event listener for Enter key (with Shift+Enter for new line)
     userInput.addEventListener('keydown', (e) => {
@@ -60,6 +64,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatMessages.removeChild(typingIndicator);
             }
             showError('Network error. Please try again later.');
+        }
+    }
+    
+    // Function to clear chat history
+    async function clearChatHistory() {
+        try {
+            const response = await fetch('/api/chat/history', {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                // Clear all messages from the UI
+                chatMessages.innerHTML = '';
+                
+                // Show confirmation message
+                const confirmationDiv = document.createElement('div');
+                confirmationDiv.className = 'system-message';
+                confirmationDiv.textContent = 'Chat history has been cleared.';
+                chatMessages.appendChild(confirmationDiv);
+                
+                // Remove confirmation after 3 seconds
+                setTimeout(() => {
+                    if (confirmationDiv.parentNode === chatMessages) {
+                        chatMessages.removeChild(confirmationDiv);
+                    }
+                }, 3000);
+            } else {
+                showError('Failed to clear chat history.');
+            }
+        } catch (error) {
+            showError('Network error. Failed to clear chat history.');
         }
     }
     
