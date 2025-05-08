@@ -16,6 +16,11 @@ namespace BacklogAiAgent.Config
         public string AzureAISearchUri { get; }
         public string AzureAISearchKey { get; }
         public string AzureAISearchCollectionName { get; }
+        
+        // Azure DevOps settings
+        public string AzureDevOpsOrganizationUrl { get; }
+        public string AzureDevOpsProject { get; }
+        public string AzureDevOpsPersonalAccessToken { get; }
 
         public ConfigurationManager()
         {
@@ -32,6 +37,11 @@ namespace BacklogAiAgent.Config
             AzureAISearchUri = Environment.GetEnvironmentVariable("AZURE_SEARCH_ENDPOINT") ?? "";
             AzureAISearchKey = Environment.GetEnvironmentVariable("AZURE_SEARCH_API_KEY") ?? "";
             AzureAISearchCollectionName = Environment.GetEnvironmentVariable("AZURE_SEARCH_COLLECTION_NAME") ?? "";
+            
+            // Azure DevOps settings
+            AzureDevOpsOrganizationUrl = Environment.GetEnvironmentVariable("AZURE_DEVOPS_ORG_URL") ?? "";
+            AzureDevOpsProject = Environment.GetEnvironmentVariable("AZURE_DEVOPS_PROJECT") ?? "";
+            AzureDevOpsPersonalAccessToken = Environment.GetEnvironmentVariable("AZURE_DEVOPS_PAT") ?? "";
         }
 
         /// <summary>

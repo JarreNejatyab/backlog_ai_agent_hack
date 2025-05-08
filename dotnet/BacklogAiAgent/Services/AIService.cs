@@ -27,7 +27,14 @@ namespace BacklogAiAgent.Services
             _kernel = InitializeSemanticKernel();
             
             // Register knowlege search plugin
-            // _kernel.Plugins.AddFromObject(new BacklogKnowlegePlugin(_kernel,_config.AzureAISearchApiCollectionName), "BacklogKnowlegePlugin");
+            // _kernel.Plugins.AddFromObject(new BacklogKnowlegePlugin(_kernel,_config.AzureAISearchCollectionName), "BacklogKnowlegePlugin");
+
+            // Register work item plugin for Azure DevOps integration
+            _kernel.Plugins.AddFromObject(new WorkItemPlugin(
+                _config.AzureDevOpsOrganizationUrl,
+                _config.AzureDevOpsProject,
+                _config.AzureDevOpsPersonalAccessToken), 
+                "WorkItemPlugin");
 
             _agent = new()
             {

@@ -33,9 +33,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/dotnet/ApiMgmtAiAgent/bin/Debug/net8.0/ApiMgmtAiAgent.dll",
+            "program": "${workspaceFolder}/dotnet/BacklogAiAgent/bin/Debug/net8.0/BacklogAiAgent.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/dotnet/ApiMgmtAiAgent",
+            "cwd": "${workspaceFolder}/dotnet/BacklogAiAgent",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "justMyCode": false,
