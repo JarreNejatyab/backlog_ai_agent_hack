@@ -1,0 +1,16 @@
+{
+  "ui": {
+    "name": "Backlog AI Agent",
+    "description": "A friendly AI assistant powered by Azure OpenAI",
+    "hide_cot": false,
+    "default_expand_messages": true,
+    "input_placeholder": "Ask me anything...",
+    "show_readme_as_default": true
+  },
+  "features": {
+    "multi_modal": true
+  },
+  "chainlit_server": {
+    "max_message_size": 16000000
+  }
+}

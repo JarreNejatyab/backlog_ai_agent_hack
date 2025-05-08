@@ -72,11 +72,17 @@ class FriendlyAgent:
             if not self.agent:
                 raise ValueError("Agent has not been properly initialized")
             
+            # Log the incoming message
+            logger.info(f"Processing message: {message}")
+            
             # Add user message to chat history
             self.chat_history.add_user_message(message)
             
             # Get response from agent
             response = await self.agent.get_response(chat_history=self.chat_history)
+            
+            # Add assistant response to chat history to maintain conversation context
+            self.chat_history.add_assistant_message(response.content)
             
             return response.content
             
