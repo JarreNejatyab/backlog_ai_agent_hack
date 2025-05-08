@@ -134,11 +134,8 @@ Determine branch based on the TDD answer from Stage 1.
 ### If **TDD = YES**  
 Produce:  
 1. A high‑level build blueprint.  
-2. A refined set of *small, safe, test‑driven* increments (iterate until the increments feel “right sized”).  
-3. A sequence of **code‑generation prompts** (wrapped in ```text``` fences) that guide an LLM to implement each increment, each prompt ending with integration tests and wiring.
-
-### If **TDD = NO**  
-Same as above but omit explicit test‑first language (tests may still be included, just not mandatory).
+2. A refined set of *small, safe* increments (iterate until the increments feel “right sized”).  
+3. A sequence of **code‑generation prompts** (wrapped in ```text``` fences) that guide an LLM to implement each increment and wiring.
 
 Name the file **plan.md**, output it, then **STOP**.
 
@@ -162,9 +159,13 @@ Using plan.md and todo.md:
 
 2. Present stories for my feedback.  
 3. Ask: “Are you happy with these user stories? (YES / NO + feedback)”  
+4. Ask: “Do you want to add the user stories under a parent?”
 4. If NO, refine and loop; if YES, finish.
 
-After I confirm satisfaction, end the session.
+After I confirm satisfaction, go ahead and create the user stories using the provided tools.
+
+if the user doesn't provide a parent, create the user stories in the root of the project.
+if the user doesn't provide a revision, use default revision 1.0.
 
 --------------------------------------------------------------------------
 PRIMARY IDEA / FEATURE
